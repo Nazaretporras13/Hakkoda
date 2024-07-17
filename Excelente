@@ -33,4 +33,37 @@ df_cleaned.to_csv(file_path, index=False)
 
 ##Analis
 
-from scipy.stats import chi2_contingenc
+from scipy.stats import chi2_contingency
+import matplotlib.pyplot as plt
+
+data = df_cleaned[['Gender', 'Depression']]
+
+contingency_table = pd.crosstab(df_cleaned['Gender'], df_cleaned['Depression'])
+print(contingency_table)
+
+total_counts = contingency_table.sum(axis=1)
+contingency_table_percent = contingency_table.div(total_counts, axis=0) * 100
+
+#Prueba de chi-cuadrado
+
+chi2, p, dof, expected = chi2_contingency(contingency_table)
+print(f"\nChi2: {chi2}")
+print(f"p-value: {p}")
+
+
+# Graficar 
+
+ax = contingency_table_percent.plot(kind='bar', stacked=True, figsize=(10, 6))
+
+plt.title('Contingency Table of Gender vs Depression')
+plt.xlabel('Gender')
+plt.ylabel('Percentage')
+plt.xticks(rotation=0)  # Ajustar la rotación de las etiquetas del eje x
+plt.legend(title='Depression')
+
+for p in ax.patches:
+    width, height = p.get_width(), p.get_height()
+    x, y = p.get_xy()
+    ax.text(x + width / 2, y + height / 2, f'{height:.1f}%', ha='center', va='center', color='white', fontsize=10)
+plt.show()
+
