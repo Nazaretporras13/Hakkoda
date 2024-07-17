@@ -1,0 +1,36 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+df = pd.read_csv('/Users/nazaporras/Desktop/data1.csv')
+df.info()
+print(df.columns)
+
+df = df.rename(columns={
+  'Your current year of Study': 'Year of Study',
+  'What is your CGPA?': 'CGPA',
+  'Do you have Depression?': 'Depression',
+  'Do you have Anxiety?': 'Anxiety',
+  'Do you have Panic attack?': 'Panic Attack',
+  'Did you seek any specialist for a treatment?': 'Treatment'
+})
+
+df.info()
+
+pd.to_datetime(df['Timestamp'], format='%d/%m/%Y %H:%M', errors='coerce')
+df['Timestamp'] = pd.to_datetime(df['Timestamp'], format='%d/%m/%Y %H:%M', errors='coerce')
+
+df['Year of Study'] = df['Year of Study'].str.replace(r'\bYear\b', '', regex=True, case=False)
+
+df_cleaned = df.dropna()
+df_cleaned['Age'] = df_cleaned['Age'].astype(int)
+print(df_cleaned)
+
+columns_to_lower = ['Depression', 'Anxiety', 'Panic Attack', 'Treatment']
+df_cleaned.loc[:, columns_to_lower] = df_cleaned[columns_to_lower].apply(lambda x: x.str.lower())
+print(df_cleaned)
+
+file_path = '/Users/nazaporras/Desktop/df_cleaned.csv'
+df_cleaned.to_csv(file_path, index=False)
+
+##Analis
+
+from scipy.stats import chi2_contingenc
