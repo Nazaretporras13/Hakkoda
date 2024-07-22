@@ -26,17 +26,20 @@ print(df.columns)
 # Convert Timestamp to datetime format
 pd.to_datetime(df['Timestamp'], format='%d/%m/%Y %H:%M', errors='coerce')
 df['Timestamp'] = pd.to_datetime(df['Timestamp'], format='%d/%m/%Y %H:%M', errors='coerce')
+df.info()
 
 # Clean Year of Study
 df['Year of Study'] = df['Year of Study'].str.replace(r'\bYear\b', '', regex=True, case=False)
 
 # Remove rows with missing values
 df_cleaned = df.dropna()
+print(df_cleaned)
 df_cleaned['Age'] = df_cleaned['Age'].astype(int)
 print(df_cleaned)
 
 # Convert selected columns to lowercase
 columns_to_lower = ['Depression', 'Anxiety', 'Panic Attack', 'Treatment']
+df_cleaned.info
 df_cleaned.loc[:, columns_to_lower] = df_cleaned[columns_to_lower].apply(lambda x: x.str.lower())
 print(df_cleaned)
 
@@ -64,6 +67,8 @@ contingency_table_percent = contingency_table.div(total_counts, axis=0) * 100
 chi2, p, dof, expected = chi2_contingency(contingency_table)
 print(f"\nChi2: {chi2}")
 print(f"p-value: {p}")
+print(f"DF: {dof}")
+print(f"expected: {expected}")
 
 # Bar plot
 ax = contingency_table_percent.plot(kind='bar', stacked=True, figsize=(10, 6))
@@ -91,6 +96,7 @@ print(contingency_table)
 
 total_counts = contingency_table.sum(axis=1)
 contingency_table_percent = contingency_table.div(total_counts, axis=0) * 100
+print(contingency_table_percent)
 
 # Chi-squared test
 chi2, p, dof, expected = chi2_contingency(contingency_table)
@@ -177,6 +183,42 @@ for p in ax.patches:
 
 plt.show()
 
+##Shapiro y Normalidad
 
+from statsmodels.formula.api import ols
+df_cleaned['Depression'] = df_cleaned['Depression'].map({'yes': 1, 'no': 0})
+formula = 'Depression ~ C(Gender) + Age'
+model = ols(formula, data=df_cleaned).fit()
+print(model.summary())
+
+
+##SQL PART
+
+#TOTAL OF SALES 
+SELECT
+	round(SUM(NA_Sales),3) AS 'Total of Sales-North America ',
+	round(AVG(NA_Sales),3) AS 'North America Average',
+	round(SUM(JP_Sales),3 )AS 'Total of Sales-Japon',
+	round(AVG(JP_Sales),3) AS 'Japan Average',
+	round(SUM(EU_Sales),3) AS 'Total of Sales-Europe',
+	round(AVG(EU_Sales),3) AS 'Europe Average',
+	round(SUM(Global_Sales),3) AS ' Total of Global Sales',
+	round(AVG(Global_Sales),3) AS 'Global Average'
+FROM	
+	vgsales
+
+#MAXIMUN AND MINIMUS
+
+SELECT
+	MAX(Global_Sales) AS 'Maximun of Global Sales',
+	MIN(Global_Sales) AS 'Minimiun of Global Sales',
+	MAX(JP_Sales) AS 'Maximun of Japan',
+	MIN(JP_Sales) AS 'Minimiun of Japan',
+	MAX(NA_Sales) AS 'Maximun of North America',
+	MIN(NA_Sales) AS 'Minimiun of North America',
+	MAX(EU_Sales) AS 'Maximun of Europe',
+	MIN(EU_Sales) AS 'Minimiun of Europe' 
+FROM
+	vgsales
 
 
