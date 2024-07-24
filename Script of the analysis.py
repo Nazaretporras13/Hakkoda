@@ -3,7 +3,7 @@
 
 ### Methodology 
 
-```python
+
 import pandas as pd
 
 df = pd.read_csv('/Users/nazaporras/Desktop/data1.csv')
@@ -192,33 +192,6 @@ model = ols(formula, data=df_cleaned).fit()
 print(model.summary())
 
 
-##SQL PART
 
-#TOTAL OF SALES 
-SELECT
-	round(SUM(NA_Sales),3) AS 'Total of Sales-North America ',
-	round(AVG(NA_Sales),3) AS 'North America Average',
-	round(SUM(JP_Sales),3 )AS 'Total of Sales-Japon',
-	round(AVG(JP_Sales),3) AS 'Japan Average',
-	round(SUM(EU_Sales),3) AS 'Total of Sales-Europe',
-	round(AVG(EU_Sales),3) AS 'Europe Average',
-	round(SUM(Global_Sales),3) AS ' Total of Global Sales',
-	round(AVG(Global_Sales),3) AS 'Global Average'
-FROM	
-	vgsales
-
-#MAXIMUN AND MINIMUS
-
-SELECT
-	MAX(Global_Sales) AS 'Maximun of Global Sales',
-	MIN(Global_Sales) AS 'Minimiun of Global Sales',
-	MAX(JP_Sales) AS 'Maximun of Japan',
-	MIN(JP_Sales) AS 'Minimiun of Japan',
-	MAX(NA_Sales) AS 'Maximun of North America',
-	MIN(NA_Sales) AS 'Minimiun of North America',
-	MAX(EU_Sales) AS 'Maximun of Europe',
-	MIN(EU_Sales) AS 'Minimiun of Europe' 
-FROM
-	vgsales
 
 
